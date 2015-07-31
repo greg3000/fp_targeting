@@ -33,3 +33,7 @@ predictions <- predict(modelFit, newdata=testing)
 predictions
 confusionMatrix(predictions, testing$age)
 
+#fitting the model to data with no age data
+testing2 <-testing[,-4]
+predictions2 <- predict(modelFit, newdata=testing2)
+predictions2
