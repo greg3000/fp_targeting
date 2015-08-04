@@ -1,37 +1,52 @@
-library(class) #needed for the islr knn approach
-library(caret)
-library(ISLR)
 
-setwd("~/Documents/R/fp_targeting/")
-data = read.csv("KNN_Exp.csv")
+library(caret)
+
+
+setwd("C:\\Users\\Stephen Oxley\\Documents\\GitHub\\fp_targeting")
+data = read.csv("EPC_KNN_TEST2.csv")
 attach(data)
-plot(x,y, col=as.factor(age))
+plot(X_COORDINATE,Y_COORDINATE, col=as.factor(PROP_AGE))
+
+data <- data[,3:5]
+
+#recode data to pre/post 1930 - don't run this section if want to maintain
+#original date categories 
+data$PROP_AGE[data$PROP_AGE==101] <- "pre_1930"
+data$PROP_AGE[data$PROP_AGE==102] <- "post_1930"
+data$PROP_AGE[data$PROP_AGE==103] <- "post_1930"
+data$PROP_AGE[data$PROP_AGE==104] <- "post_1930"
+data$PROP_AGE[data$PROP_AGE==105] <- "post_1930"
+data$PROP_AGE[data$PROP_AGE==106] <- "post_1930"
+
+
+
 
 #standardise the data
-
-data$x=scale(data$x)
-data$y=scale(data$y)
+data$X_COORDINATE=scale(data$X_COORDINATE)
+data$Y_COORDINATE=scale(data$Y_COORDINATE)
 
 
 
 #plot the data again
-plot(data$x,data$y, col=as.factor(data$age))
+plot(data$X_COORDINATE,data$Y_COORDINATE, col=as.factor(data$PROP_AGE))
 
 #create testing and training sets
-inTrain <- createDataPartition(y=age, p=0.75, list=FALSE)
+inTrain <- createDataPartition(y=PROP_AGE, p=0.75, list=FALSE)
 training <- data[inTrain,]
 testing <- data[-inTrain,]
 
-
-
+summary(data)
+table(data$PROP_AGE)
 #run the knn prediction
 
+head(data)
+
 #modelFit <- train(age ~., data=training, method= "knn")
-modelFit <- train(as.factor(age) ~., data=training , method= "knn")
+modelFit <- train(as.factor(PROP_AGE) ~., data=training , method= "knn")
 modelFit$finalModel
 predictions <- predict(modelFit, newdata=testing)
 predictions
-confusionMatrix(predictions, testing$age)
+confusionMatrix(predictions, testing$PROP_AGE)
 
 #fitting the model to data with no age data
 testing2 <-testing[,-4]
